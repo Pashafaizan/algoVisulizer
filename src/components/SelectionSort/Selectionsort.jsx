@@ -5,6 +5,7 @@ function waitforme(ms) {
     setTimeout(resolve, ms);
   });
 }
+let speed = 500;
 
 async function getSwapDiv(firstDiv, secondDiv, i, j) {
 
@@ -21,10 +22,10 @@ async function getSwapDiv(firstDiv, secondDiv, i, j) {
     -(j - i) * 50 + parseInt(currentSecondDiv)
   }px)`;
 
-  await waitforme(1000);
+  await waitforme(speed);
 }
 function Selectionsort(props) {
-  let arr = [3, 13, 18, 2, 17, 20, 19,2];
+  let arr = [3, 13, 18, 2, 17, 19,15];
   useEffect(() => {
     if(props.playState){
       selectionsortAlgo();
@@ -43,7 +44,7 @@ function Selectionsort(props) {
     for (let i = 0; i < n; i++) {
       let cond=true;
       firstLoop.classList.add('black_box');
-      await waitforme(1000);
+      await waitforme(speed);
       secondLoop.classList.remove('black_box');
       swapElement.classList.remove("black_box");
       let mySecondElement;
@@ -55,7 +56,7 @@ function Selectionsort(props) {
 
        div1.appendChild(
         document.createTextNode(
-          `@Insertion Sort let  ${arr[min]}`
+          `@Selection Sort let min =  ${arr[min]}`
         )
         
         
@@ -84,7 +85,7 @@ function Selectionsort(props) {
          let div2 = document.createElement("div");
          div2.appendChild(
           document.createTextNode(
-            `@Insertion Sort compare ${arr[min]} and ${arr[j]}`
+            `@Selection Sort compare ${arr[min]} and ${arr[j]}`
           )
           
           
@@ -98,12 +99,12 @@ function Selectionsort(props) {
            let div3 = document.createElement("div");
            div3.appendChild(
             document.createTextNode(
-              `@Insertion Sort compare${arr[min]} < ${arr[j]} so min=${arr[j]}`
+              `@Selection Sort compare${arr[min]} < ${arr[j]} so min=${arr[j]}`
             ))
             element.appendChild(div3);
          secondLoop.classList.remove('black_box');
           checkMin.classList.add('black_box');
-          await waitforme(1000);
+          await waitforme(speed);
        
           minElement.classList.remove("min_element")
           min = j;
@@ -121,14 +122,14 @@ function Selectionsort(props) {
           
       }
       checkMin.classList.remove('black_box');
-        await waitforme(1000);
+        await waitforme(speed);
         mySecondElement.classList.remove("current_div");
          if(cond){
         
            let div4 = document.createElement("div");
            div4.appendChild(
           document.createTextNode(
-            `@Insertion Sort compare ${arr[min]} > ${arr[j]}  continue`
+            `@Selection Sort compare ${arr[min]} > ${arr[j]}  continue`
           ))
           element.appendChild(div4);
         }
@@ -142,7 +143,7 @@ function Selectionsort(props) {
         mySecondElement = document.getElementById(min);
          getSwapDiv(myFirstElement, mySecondElement,i,min);
        
-         await waitforme(1000);
+         await waitforme(speed);
 
          
         myFirstElement.setAttribute("id", min);
@@ -157,6 +158,7 @@ function Selectionsort(props) {
       myFirstElement= document.getElementById(i);
       myFirstElement.classList.add('final_pos');
     }
+    firstLoop.classList.remove('black_box');
   };
   return (
     <div style={{marginTop:120}}>

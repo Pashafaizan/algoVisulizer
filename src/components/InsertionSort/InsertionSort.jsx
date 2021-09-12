@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import "./insertionsort.css";
 let isTrue = false;
-
+let speed = 500
 function waitforme(ms) {
   
   return new Promise((resolve) => {
@@ -13,7 +13,7 @@ async function getSwapDiv(firstDiv, secondDiv, isTrue = false) {
   let currentFirstDiv = firstDiv.style.transform.split("(")[1].split("px")[0];
   let currentSecondDiv = secondDiv.style.transform.split("(")[1].split("px")[0];
 
-  await waitforme(1000);
+  await waitforme(speed);
   firstDiv.style.transform = `translateX(${parseInt(currentFirstDiv) + 50}px)`;
   secondDiv.style.transform = `translateX(${
     parseInt(currentSecondDiv) - 50
@@ -29,7 +29,7 @@ async function getSwapDiv(firstDiv, secondDiv, isTrue = false) {
     )
   );
   isTrue = true;
-  await waitforme(1000);
+  await waitforme(speed);
 }
 
 function InsertionSort(props) {
@@ -67,9 +67,9 @@ function InsertionSort(props) {
     
     
       innerLoopAndCheck.classList.remove("black_box");
-      await waitforme(1000);
+      await waitforme(speed);
       innerLoopAndCheck.classList.add("black_box");
-      await waitforme(1000);
+      await waitforme(speed);
       while (j >= 0 && arr[j] > key) {
         outerLoop.classList.remove("black_box");
 
@@ -80,7 +80,7 @@ function InsertionSort(props) {
         nextDiv.classList.add("current_div");
   
         element.scrollTo({top:element.scrollHeight, behavior:"smooth"})
-        await waitforme(1000);
+        await waitforme(speed);
         swap.classList.add("black_box");
         getSwapDiv(startDiv, nextDiv);
 
@@ -92,12 +92,12 @@ function InsertionSort(props) {
         startDiv.classList.remove("current_div");
         nextDiv.classList.remove("current_div");
 
-        await waitforme(1000);
+        await waitforme(speed);
         arr[j + 1] = arr[j];
         j = j - 1;
       }
       swap.classList.remove("black_box");
-      await waitforme(1000);
+      await waitforme(speed);
       arr[j + 1] = key;
       isTrue = false;
       myFirstElement.classList.remove("current_div");

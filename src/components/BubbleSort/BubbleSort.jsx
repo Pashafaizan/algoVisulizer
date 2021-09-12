@@ -1,12 +1,13 @@
 import React, { useEffect, useState } from "react";
 import "./BubbleSort.css";
-import BubbleSortProgram from "./BubbleSortProgram";
+
 function waitforme(ms) {
   console.log("this is await for me");
   return new Promise((resolve) => {
     setTimeout(resolve, ms);
   });
 }
+let speed = 500;
 async function getSwapDiv(firstDiv, secondDiv, j) {
   let currentFirstDiv = firstDiv.style.transform.split("(")[1].split("px")[0];
   let currentSecondDiv = secondDiv.style.transform.split("(")[1].split("px")[0];
@@ -14,12 +15,12 @@ async function getSwapDiv(firstDiv, secondDiv, j) {
   secondDiv.style.transform = `translateX(${
     parseInt(currentSecondDiv) - 50
   }px)`;
-  await waitforme(1000);
+  await waitforme(speed);
 }
 
 function BubbleSort(props) {
   const [openBtn, setOpenBtn] = useState(true);
-  let arr = [3, 13, 18, 2, 17, 20, 13, 19];
+  let arr = [3, 13, 18, 2, 17, 19,15];
   useEffect(() => {
 if(props.playState){
   bubbleSortAlgo();
@@ -41,14 +42,14 @@ if(props.playState){
     for (let i = 0; i < arr.length - 1; i++) {
       outerLoop.classList.add("black_box");
 
-      await waitforme(1000);
+      await waitforme(speed);
 
       for (let j = 0; j < arr.length - i - 1; j++) {
         outerLoop.classList.remove("black_box");
         innerLoop.classList.add("black_box");
         check.classList.remove("black_box");
         swap.classList.remove("black_box");
-        await waitforme(1000);
+        await waitforme(speed);
         element.scrollTo({top:element.scrollHeight, behavior:"smooth"})
         let notSwap = true;
         let para = document.createElement("div");
@@ -67,13 +68,13 @@ if(props.playState){
         mySecondElement.classList.add("swap_div");
         innerLoop.classList.remove("black_box");
         check.classList.add("black_box");
-        await waitforme(1000);
+        await waitforme(speed);
 
         if (arr[j] > arr[j + 1]) {
           check.classList.remove("black_box");
           console.log(swap);
           swap.classList.add("black_box");
-          await waitforme(1000);
+          await waitforme(speed);
 
           let para2 = document.createElement("div");
           element.appendChild(para2);
@@ -109,7 +110,7 @@ if(props.playState){
           );
         }
         value = j + 1;
-        await waitforme(1000);
+        await waitforme(speed);
         myFirstElement.classList.remove("swap_div");
         mySecondElement.classList.remove("swap_div");
       }

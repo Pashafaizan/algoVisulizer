@@ -9,13 +9,12 @@ function App() {
   const [isPlay, setIsPlay] = useState(false);
   return (
     <div className="App">
-      {/* <Header/> */}
+      
       <Router>
         <Switch>
           <Route exact path="/">
             <Header
               play={() => {
-                console.log("this is play function");
                 setIsPlay(true);
               }}
             />
@@ -23,15 +22,13 @@ function App() {
           </Route>
           <Route exact path="/insertion">
             <Header  play={() => {
-                console.log("this is play function");
-                setIsPlay(true);
+              setIsPlay(true);
               }}/>
             <InsertionSort playState={isPlay}  />
           </Route>
           <Route exact path="/selection">
           <Header  play={() => {
-                console.log("this is play function");
-                setIsPlay(true);
+             setIsPlay(true);
               }}/>
             <Selectionsort playState={isPlay} />
           </Route>

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef } from "react";
 function waitforme(ms) {
   console.log("this is await for me");
   return new Promise((resolve) => {
@@ -7,161 +7,158 @@ function waitforme(ms) {
 }
 let speed = 500;
 
-async function getSwapDiv(firstDiv, secondDiv, i, j) {
-
-  let currentFirstDiv = firstDiv.style.transform.split("(")[1].split("px")[0];
-  let currentSecondDiv = secondDiv.style.transform.split("(")[1].split("px")[0];
-
-
-  firstDiv.style.transform = `translateX(${
-    (j - i) * 50 + parseInt(currentFirstDiv)
-  }px)`;
-  let offset = (j - i) * 50;
- 
-  secondDiv.style.transform = `translateX(${
-    -(j - i) * 50 + parseInt(currentSecondDiv)
-  }px)`;
-
-  await waitforme(speed);
-}
 function Selectionsort(props) {
-  let arr = [3, 13, 18, 2, 17, 19,15];
+  let arr = [3, 13, 18, 2, 17, 19, 15];
+  const logTracerRef = useRef();
+  const firstLoopRef = useRef();
+  const secondLoopRef = useRef();
+  const checkMinRef = useRef();
+  const swapRef = useRef();
+  const selectionDivRef = useRef(
+    [...new Array(arr.length)].map(() => React.createRef())
+  );
   useEffect(() => {
-    if(props.playState){
+    if (props.playState) {
       selectionsortAlgo();
     }
-      }, [props.playState])
+  }, [props.playState]);
   const selectionsortAlgo = async () => {
-    let element = document.getElementById('log_tracer');
     let n = arr.length;
-    let firstLoop = document.getElementById("p0");
-    let secondLoop = document.getElementById("p2")
-    let checkMin = document.getElementById("p3");
-    let swapElement = document.getElementById("p5");
+
     let para = document.createElement("div");
-    
-   
-    for (let i = 0; i < n; i++) {
-      let cond=true;
-      firstLoop.classList.add('black_box');
+    async function getSwapDiv(firstDiv, secondDiv, i, j) {
+      let currentFirstDiv = firstDiv.current.style.transform
+        .split("(")[1]
+        .split("px")[0];
+      let currentSecondDiv = secondDiv.current.style.transform
+        .split("(")[1]
+        .split("px")[0];
+
+      firstDiv.current.style.transform = `translateX(${
+        (j - i) * 50 + parseInt(currentFirstDiv)
+      }px)`;
+      let offset = (j - i) * 50;
+
+      secondDiv.current.style.transform = `translateX(${
+        -(j - i) * 50 + parseInt(currentSecondDiv)
+      }px)`;
+
       await waitforme(speed);
-      secondLoop.classList.remove('black_box');
-      swapElement.classList.remove("black_box");
+    }
+
+    for (let i = 0; i < n; i++) {
+      let cond = true;
+      firstLoopRef.current.classList.add("black_box");
+      await waitforme(speed);
+      secondLoopRef.current.classList.remove("black_box");
+      swapRef.current.classList.remove("black_box");
       let mySecondElement;
       let myFirstElement;
-     
+
       let min = i;
-      
-       let div1 = document.createElement("div");
 
-       div1.appendChild(
-        document.createTextNode(
-          `@Selection Sort let min =  ${arr[min]}`
-        )
-        
-        
-        
-        
+      let div1 = document.createElement("div");
+      logTracerRef.current.appendChild(div1);
+      div1.appendChild(
+        document.createTextNode(`@Selection Sort let min =  ${arr[min]}`)
       );
-      element.appendChild(div1);
-    
+      console.log(div1);
 
-      myFirstElement = document.getElementById(i);
-      myFirstElement.classList.add("current_div");
+      myFirstElement = selectionDivRef.current[i];
+      myFirstElement.current.classList.add("current_div");
       for (let j = i + 1; j < n; j++) {
+        firstLoopRef.current.classList.remove("black_box");
+        secondLoopRef.current.classList.add("black_box");
 
-        firstLoop.classList.remove('black_box');
-        secondLoop.classList.add('black_box');
-        
-        mySecondElement = document.getElementById(j);
-    
-        element.scrollTo({top:element.scrollHeight, behavior:"smooth"})
+        mySecondElement = selectionDivRef.current[j];
 
-        mySecondElement.classList.add("current_div");
-        let minElement = document.getElementById(min);
-        minElement.classList.remove("current_div")
-        minElement.classList.add("min_element")
-       
-         let div2 = document.createElement("div");
-         div2.appendChild(
+        logTracerRef.current.scrollTo({
+          top: logTracerRef.current.scrollHeight,
+          behavior: "smooth",
+        });
+
+        mySecondElement.current.classList.add("current_div");
+        let minElement = selectionDivRef.current[min];
+        minElement.current.classList.remove("current_div");
+        minElement.current.classList.add("min_element");
+
+        let div2 = document.createElement("div");
+        div2.appendChild(
           document.createTextNode(
             `@Selection Sort compare ${arr[min]} and ${arr[j]}`
           )
-          
-          
-          
-          
         );
-        element.appendChild(div2);
+        logTracerRef.current.appendChild(div2);
         if (arr[j] < arr[min]) {
-          cond =false;
-          
-           let div3 = document.createElement("div");
-           div3.appendChild(
+          cond = false;
+
+          let div3 = document.createElement("div");
+          div3.appendChild(
             document.createTextNode(
               `@Selection Sort compare${arr[min]} < ${arr[j]} so min=${arr[j]}`
-            ))
-            element.appendChild(div3);
-         secondLoop.classList.remove('black_box');
-          checkMin.classList.add('black_box');
+            )
+          );
+          logTracerRef.current.appendChild(div3);
+          secondLoopRef.current.classList.remove("black_box");
+          checkMinRef.current.classList.add("black_box");
           await waitforme(speed);
-       
-          minElement.classList.remove("min_element")
+
+          minElement.current.classList.remove("min_element");
           min = j;
-          myFirstElement.classList.remove('current_div');
-           minElement = document.getElementById(min);
+          myFirstElement.current.classList.remove("current_div");
+          minElement = selectionDivRef.current[min];
           console.log(min);
           console.log(minElement);
-          minElement.classList.remove("current_div")
-          minElement.classList.add("min_element")
-          mySecondElement.classList.add("current_div");
+          minElement.current.classList.remove("current_div");
+          minElement.current.classList.add("min_element");
+          mySecondElement.current.classList.add("current_div");
           if (para.offsetTop > "200") {
-         
-            element.style.transform = `translateY(${para.offsetTop - 100})px`;
+            logTracerRef.current.style.transform = `translateY(${
+              para.offsetTop - 100
+            })px`;
           }
-          
-      }
-      checkMin.classList.remove('black_box');
+        }
+        checkMinRef.current.classList.remove("black_box");
         await waitforme(speed);
-        mySecondElement.classList.remove("current_div");
-         if(cond){
-        
-           let div4 = document.createElement("div");
-           div4.appendChild(
-          document.createTextNode(
-            `@Selection Sort compare ${arr[min]} > ${arr[j]}  continue`
-          ))
-          element.appendChild(div4);
+        mySecondElement.current.classList.remove("current_div");
+        if (cond) {
+          let div4 = document.createElement("div");
+          div4.appendChild(
+            document.createTextNode(
+              `@Selection Sort compare ${arr[min]} > ${arr[j]}  continue`
+            )
+          );
+          logTracerRef.current.appendChild(div4);
         }
       }
-  
+
       if (min != i) {
-        checkMin.classList.remove('black_box');
-        swapElement.classList.add("black_box");
+        checkMinRef.current.classList.remove("black_box");
+        swapRef.current.classList.add("black_box");
 
-        myFirstElement = document.getElementById(i);
-        mySecondElement = document.getElementById(min);
-         getSwapDiv(myFirstElement, mySecondElement,i,min);
-       
-         await waitforme(speed);
+        myFirstElement = selectionDivRef.current[i];
+        mySecondElement = selectionDivRef.current[min];
+        getSwapDiv(myFirstElement, mySecondElement, i, min);
 
-         
-        myFirstElement.setAttribute("id", min);
-          mySecondElement.setAttribute("id", i);
-          
-          myFirstElement.classList.remove('min_element');
-        
+        await waitforme(speed);
+
+        let temp1 = selectionDivRef.current[min];
+        selectionDivRef.current[min] = selectionDivRef.current[i];
+        selectionDivRef.current[i] = temp1;
+
+        myFirstElement.current.classList.remove("min_element");
+
         let tmp = arr[i];
         arr[i] = arr[min];
         arr[min] = tmp;
       }
-      myFirstElement= document.getElementById(i);
-      myFirstElement.classList.add('final_pos');
+      myFirstElement = selectionDivRef.current[i];
+      myFirstElement.current.classList.add("final_pos");
     }
-    firstLoop.classList.remove('black_box');
+    firstLoopRef.current.classList.remove("black_box");
   };
   return (
-    <div style={{marginTop:120}}>
+    <div style={{ marginTop: 120 }}>
       <div className="main_section_bs">
         <div className="section_bs">
           {arr.map((value, index) => {
@@ -169,7 +166,7 @@ function Selectionsort(props) {
               <>
                 <div
                   key={index}
-                  id={index}
+                  ref={selectionDivRef.current[index]}
                   className="default_div"
                   style={{
                     height: value * 10,
@@ -184,33 +181,33 @@ function Selectionsort(props) {
           })}
         </div>
 
-        <div className="log_tracer" id="log_tracer">
+        <div className="log_tracer" ref={logTracerRef}>
           <div>
             <span>@Selection Sort &nbsp; </span> is mounted
           </div>
         </div>
-
       </div>
       <div className="bs_program">
         <div></div>
         <div
-          id="p0"
+          ref={firstLoopRef}
           className="box"
         >{`for (let i = 0; i < length; i++) {`}</div>
-        <div id="p1"  className="box">{`let min = i`}</div>
+        <div id="p1" className="box">{`let min = i`}</div>
         <div
-          id="p2"
+          ref={secondLoopRef}
           className="box"
         >{` for (let j = i+1; j < arr.length - i - 1; j++) {`}</div>
         <div
-          id="p3"
+          ref={checkMinRef}
           className="box"
-          // id="check_swap"
         >{`if (arr[j] < arr[min]) {`}</div>
-        <div id="p4"  className="box">{`min=j }`}</div>
-        <div id="p5" className="box">{`swapElement(arr[i],arr[min])`}</div>
+        <div id="p4" className="box">{`min=j }`}</div>
+        <div
+          ref={swapRef}
+          className="box"
+        >{`swapElement(arr[i],arr[min])`}</div>
         <div id="p6" className="box">{`} }`}</div>
-       
       </div>
     </div>
   );

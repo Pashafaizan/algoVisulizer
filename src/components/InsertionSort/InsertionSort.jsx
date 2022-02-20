@@ -1,118 +1,138 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef } from "react";
 import "./insertionsort.css";
 let isTrue = false;
-let speed = 500
+let speed = 500;
 function waitforme(ms) {
-  
   return new Promise((resolve) => {
     setTimeout(resolve, ms);
   });
 }
-async function getSwapDiv(firstDiv, secondDiv, isTrue = false) {
-  let element = document.getElementById("log_tracer_is");
-  let currentFirstDiv = firstDiv.style.transform.split("(")[1].split("px")[0];
-  let currentSecondDiv = secondDiv.style.transform.split("(")[1].split("px")[0];
-
-  await waitforme(speed);
-  firstDiv.style.transform = `translateX(${parseInt(currentFirstDiv) + 50}px)`;
-  secondDiv.style.transform = `translateX(${
-    parseInt(currentSecondDiv) - 50
-  }px)`;
-  let firstSwap = firstDiv.innerText;
-  let secondSwap = secondDiv.innerText;
-  let divIs = document.createElement("div");
-  console.log(divIs);
-  element.appendChild(divIs);
-  divIs.appendChild(
-    document.createTextNode(
-      `@Insertion Sort Swapping   ${firstSwap} and ${secondSwap}`
-    )
-  );
-  isTrue = true;
-  await waitforme(speed);
-}
 
 function InsertionSort(props) {
-  let arr = [7,25,30,10,5,20,4,2];
+  let arr = [7, 25, 30, 10, 5, 20, 4, 2];
+  const logTracerRef = useRef();
+  const outerLoopRef = useRef();
+  const innerLoopAndCheckRef = useRef();
+  const checkRef = useRef();
+  const swapRef = useRef();
+  const insertionDivRef = useRef(
+    [...new Array(arr.length)].map(() => React.createRef())
+  );
   useEffect(() => {
-    if(props.playState){
+    if (props.playState) {
       insertionSortAlgo();
     }
-      }, [props.playState])
+  }, [props.playState]);
   const insertionSortAlgo = async () => {
-    let element = document.getElementById("log_tracer_is");
-    let outerLoop = document.getElementById("p0");
-    let innerLoopAndCheck = document.getElementById("p1");
+    async function getSwapDiv(firstDiv, secondDiv, isTrue = false) {
+      let currentFirstDiv = firstDiv.current.style.transform
+        .split("(")[1]
+        .split("px")[0];
+      let currentSecondDiv = secondDiv.current.style.transform
+        .split("(")[1]
+        .split("px")[0];
 
-    let swap = document.getElementById("p2");
+      await waitforme(speed);
+      firstDiv.current.style.transform = `translateX(${
+        parseInt(currentFirstDiv) + 50
+      }px)`;
+      secondDiv.current.style.transform = `translateX(${
+        parseInt(currentSecondDiv) - 50
+      }px)`;
+      let firstSwap = firstDiv.current.innerText;
+      let secondSwap = secondDiv.current.innerText;
+      let divIs = document.createElement("div");
+      console.log(logTracerRef);
+      console.log(divIs);
+      logTracerRef.currrent.appendChild(divIs);
+      divIs.appendChild(
+        document.createTextNode(
+          `@Insertion Sort Swapping   ${firstSwap} and ${secondSwap}`
+        )
+      );
+      isTrue = true;
+      await waitforme(speed);
+    }
+
     let i, key, j;
     let n = arr.length;
 
     for (i = 1; i < n; i++) {
       key = arr[i];
       j = i - 1;
-      outerLoop.classList.add("black_box");
+
+      outerLoopRef.current.classList.add("black_box");
+
+      await waitforme(speed);
       let divIs = document.createElement("div");
-      console.log(divIs);
-      element.appendChild(divIs);
+      console.log(divIs, "dvis");
+      console.log(logTracerRef, "logreacerref");
+      logTracerRef.current.appendChild(divIs);
       divIs.appendChild(
         document.createTextNode(
           `@Insertion Sort Comaparing ${arr[j]} and ${arr[i]}`
         )
       );
-      let myFirstElement = document.getElementById(j);
-      let mySecondElement = document.getElementById(i);
-      myFirstElement.classList.add("current_div");
-      mySecondElement.classList.add("current_div");
-    
-    
-      innerLoopAndCheck.classList.remove("black_box");
+
+      let myFirstElement = insertionDivRef.current[j];
+      let mySecondElement = insertionDivRef.current[i];
+      console.log(myFirstElement);
+      myFirstElement.current.classList.add("current_div");
+      mySecondElement.current.classList.add("current_div");
+
+      innerLoopAndCheckRef.current.classList.remove("black_box");
       await waitforme(speed);
-      innerLoopAndCheck.classList.add("black_box");
+      innerLoopAndCheckRef.current.classList.add("black_box");
       await waitforme(speed);
       while (j >= 0 && arr[j] > key) {
-        outerLoop.classList.remove("black_box");
+        outerLoopRef.current.classList.remove("black_box");
 
-        let startDiv = document.getElementById(j);
-        let nextDiv = document.getElementById(j + 1);
+        let startDiv = insertionDivRef.current[j];
+        let nextDiv = insertionDivRef.current[j + 1];
 
-        startDiv.classList.add("current_div");
-        nextDiv.classList.add("current_div");
-  
-        element.scrollTo({top:element.scrollHeight, behavior:"smooth"})
+        startDiv.current.classList.add("current_div");
+        nextDiv.current.classList.add("current_div");
+
+        logTracerRef.current.scrollTo({
+          top: logTracerRef.current.scrollHeight,
+          behavior: "smooth",
+        });
         await waitforme(speed);
-        swap.classList.add("black_box");
+        swapRef.current.classList.add("black_box");
         getSwapDiv(startDiv, nextDiv);
 
-        startDiv.setAttribute("id", j + 1);
-        nextDiv.setAttribute("id", j);
+        let temp1 = insertionDivRef.current[j + 1];
+        insertionDivRef.current[j + 1] = insertionDivRef.current[j];
+        insertionDivRef.current[j] = temp1;
+
         if (isTrue) {
-          nextDiv.setAttribute("id", j + 1);
+          insertionDivRef.current[j] = insertionDivRef.current[j + 1];
         }
-        startDiv.classList.remove("current_div");
-        nextDiv.classList.remove("current_div");
+        startDiv.current.classList.remove("current_div");
+        nextDiv.current.classList.remove("current_div");
 
         await waitforme(speed);
         arr[j + 1] = arr[j];
         j = j - 1;
       }
-      swap.classList.remove("black_box");
+      swapRef.current.classList.remove("black_box");
       await waitforme(speed);
       arr[j + 1] = key;
       isTrue = false;
-      myFirstElement.classList.remove("current_div");
-      mySecondElement.classList.remove("current_div");
-      
+      myFirstElement.current.classList.remove("current_div");
+      mySecondElement.current.classList.remove("current_div");
+
       if (divIs.offsetTop > "200") {
-         
-        element.style.transform = `translateY(${divIs.offsetTop - 100})px`;
+        logTracerRef.current.style.transform = `translateY(${
+          divIs.offsetTop - 100
+        })px`;
       }
     }
-    innerLoopAndCheck.classList.remove("black_box");
+    innerLoopAndCheckRef.current.classList.remove("black_box");
   };
 
   return (
-    <div style={{marginTop:120}}>
+    <div style={{ marginTop: 120 }}>
       <div className="main_section_bs">
         <div className="section_bs">
           {arr.map((value, index) => {
@@ -120,7 +140,7 @@ function InsertionSort(props) {
               <>
                 <div
                   key={index}
-                  id={index}
+                  ref={insertionDivRef.current[index]}
                   className="default_div"
                   style={{
                     height: value * 10,
@@ -134,7 +154,7 @@ function InsertionSort(props) {
             );
           })}
         </div>
-        <div className="log_tracer" id="log_tracer_is">
+        <div className="log_tracer" ref={logTracerRef}>
           <div>
             <span>@Insertion Sort &nbsp; </span> is mounted
           </div>
@@ -143,12 +163,18 @@ function InsertionSort(props) {
       <div className="bs_program">
         <div></div>
         <div
-          id="p0"
+          ref={outerLoopRef}
           className="box"
         >{`for (let i = 0; i < length; i++) {`}</div>
-        <div id="p1" className="box">{` while (j >= 0 && arr[j] > key) {`}</div>
+        <div
+          ref={innerLoopAndCheckRef}
+          className="box"
+        >{` while (j >= 0 && arr[j] > key) {`}</div>
 
-        <div id="p2" className="box">{`swapElement(arr[j],arr[j+1])`}</div>
+        <div
+          ref={swapRef}
+          className="box"
+        >{`swapElement(arr[j],arr[j+1])`}</div>
         <div id="p3" className="box">{`}`}</div>
         <div id="p4" className="box">{`}`}</div>
       </div>

@@ -42,14 +42,16 @@ function InsertionSort(props) {
       let firstSwap = firstDiv.current.innerText;
       let secondSwap = secondDiv.current.innerText;
       let divIs = document.createElement("div");
-      console.log(logTracerRef);
-      console.log(divIs);
-      logTracerRef.currrent.appendChild(divIs);
+      console.log(logTracerRef,"log");
+      logTracerRef.current.appendChild(divIs);
+      //
+      
       divIs.appendChild(
         document.createTextNode(
           `@Insertion Sort Swapping   ${firstSwap} and ${secondSwap}`
-        )
-      );
+          )
+          );
+          console.log(divIs,'');
       isTrue = true;
       await waitforme(speed);
     }
